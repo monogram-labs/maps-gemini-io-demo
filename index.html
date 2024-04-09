@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/gemini.png" />
+  <title>Traveling with Gemini and Google Maps</title>
+</head>
+
+<body>
+  <main>
+    <h1>Traveling with Gemini and Google Maps</h1>
+    <form>
+      <div class="image-picker">
+        <label class="image-choice">
+          <input type="radio" checked name="chosen-image" value="/lakebaikal.jpeg">
+          <img src="/lakebaikal.jpeg">
+        </label>
+        <label class="image-choice">
+          <input type="radio" name="chosen-image" value="/powder-skiing.jpeg">
+          <img src="/powder-skiing.jpeg">
+        </label>
+        <label class="image-choice">
+          <input type="radio" name="chosen-image" value="/redwood-forest-hike.jpeg">
+          <img src="/redwood-forest-hike.jpeg">
+        </label>
+      </div>
+      <div class="prompt-box">
+        <!-- <label>
+          <input name="prompt" placeholder="Where do you want to go" type="text"
+            value="Where can I see this place? Just the place name, please.">
+        </label> -->
+        <button type="submit">Where can I see this?</button>
+      </div>
+    </form>
+    <p class="output">(Results will appear here)</p>
+  </main>
+
+  <div id="map"></div>
+  
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
