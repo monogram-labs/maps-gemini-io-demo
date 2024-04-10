@@ -103,7 +103,7 @@ async function geocodePlace(name: string) {
     
     map?.setCenter(geocodedPlace.geometry.location);
     map?.fitBounds(geocodedPlace.geometry.viewport);
-    const markerView = new AdvancedMarkerElement({
+    new AdvancedMarkerElement({
       map,
       position: geocodedPlace.geometry.location,
       title: name,
@@ -113,9 +113,6 @@ async function geocodePlace(name: string) {
   } catch (error) {
     console.log("Geocode was not successful for the following reason: " + error);
   }
-  
-
-
 }
 
 // Search for lodging near a lat/lng
@@ -138,12 +135,12 @@ async function geocodePlace(name: string) {
 // Docs (split layout): https://github.com/googlemaps/extended-component-library/blob/main/src/split_layout/README.md 
 async function findNearbyLodging(location: google.maps.LatLng) {
   const { Place, SearchNearbyRankPreference } = await loader.importLibrary("places");
-  const { AdvancedMarkerElement, PinElement } = await loader.importLibrary("marker");
+  const { AdvancedMarkerElement } = await loader.importLibrary("marker");
 
   // use Place.searchNearby to find lodging with a location bias of location
   const request = {
     // required parameters
-    fields: ["displayName", "location", "rating"],
+    fields: ["displayName", "location", "rating", "photos", "formattedAddress", "reviews"],
     locationRestriction: {
       center: location,
       radius: 10000,
@@ -162,19 +159,49 @@ async function findNearbyLodging(location: google.maps.LatLng) {
     const bounds = new LatLngBounds();
     bounds.extend(location);
 
+    const infoWindow = new google.maps.InfoWindow();
+
     // Loop through and get all the results.
     places.forEach((place) => {
-      // Change the background color of the results pins.
-      const lodgingPin = new PinElement({
-        background: "#FBBC04",
-        scale: 0.75,
-      });
+      // TODO: @Sami we can customize pin
+      const pin = document.createElement('img');
+      pin.src = '/assets/location-pin.svg';
+      pin.height = 30;
 
       const markerView = new AdvancedMarkerElement({
         map,
         position: place.location,
         title: `${place.displayName}, ${place.rating} stars`,
-        content: lodgingPin.element,
+        content: pin,
+      });
+
+      markerView.addListener("click", () => {
+        const maxPhotosCount = 2;
+        const maxReviewsCount = 3;
+        // TODO: @Sami we can style info window
+        infoWindow.setContent(
+          `<div class="info-window-content">
+            <p class="place-name">${place.displayName}</p>
+            <p class="place-address">${place.formattedAddress ?? ''}</p>
+            <p class="place-rating">${place.rating} stars</p>
+            
+            <p>Photos</p>
+            ${
+              place.photos?.slice(0, maxPhotosCount).map((photo, index) => `<img class="info-window-photo" src="${photo.getURI()}" alt="${place.displayName} - ${index}">`)
+            }
+            <p>Reviews</p>
+            <ul>
+              ${place.reviews?.slice(0, maxReviewsCount).map(review => `
+                <li>
+                  <p class="review-text">${review.text}</p>
+                  <p class="review-author">${review.authorAttribution?.displayName}</p>
+                  <p class="review-stars">${review.rating} stars</p>
+                </li>`).join('')}
+            </ul>
+          </div>`
+        );
+        // Open the info window on the map.
+        infoWindow.open(map, markerView);
       });
 
       bounds.extend(place.location!);
