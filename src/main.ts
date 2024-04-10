@@ -15,13 +15,13 @@ const loader = new Loader({
   version: "weekly",
 });
 
-const form = document.querySelector("form") as HTMLFormElement;
-if (form instanceof HTMLFormElement === false) {
+const form: HTMLFormElement | null = document.querySelector("form");
+if (!form) {
   throw new Error("form not found");
 }
 
-const output = document.querySelector(".output") as HTMLElement;
-if (output instanceof HTMLElement === false) {
+const output: HTMLElement | null = document.querySelector(".output");
+if (!output) {
   throw new Error(".output not found");
 }
 
