@@ -38,7 +38,11 @@ async function initMap() {
 
   try {
     const { Map } = await loader.importLibrary("maps");
-    map = new Map(document.getElementById("map")!, {
+
+    const mapElement = document.getElementById("map");
+    if (!mapElement) throw new Error("#map not found");
+
+    map = new Map(mapElement, {
       center: { lat: 0, lng: 0 },
       zoom: 2,
       mapTypeId: "satellite",
