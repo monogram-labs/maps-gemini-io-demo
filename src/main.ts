@@ -89,6 +89,7 @@ form.addEventListener("submit", async (e) => {
       .then((response) => response.arrayBuffer())
       .then((arrayBuffer) => Base64.fromByteArray(new Uint8Array(arrayBuffer)));
 
+    // Assemble the prompt by combining the text with the chosen image
     const contents: GenerateContentRequest["contents"] = [
       {
         role: "user",
