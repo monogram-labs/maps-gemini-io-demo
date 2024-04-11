@@ -5,6 +5,7 @@ import {
   HarmCategory,
 } from "@google/generative-ai";
 import { Loader } from "@googlemaps/js-api-loader";
+import Base64 from "base64-js";
 import "./style.css";
 
 const GEMINI_API_KEY = "AIzaSyBK88lzuqZvl7EvL9qm1he1BiI7arO8mBY";
@@ -70,12 +71,10 @@ form.addEventListener("submit", async (e) => {
     if (!chosenImage || !chosenImage.value)
       throw new Error("No image selected");
 
-    const imageUrl = chosenImage.value;
-    const response = await fetch(imageUrl);
-    const arrayBuffer = await response.arrayBuffer();
-    const imageBase64 = btoa(
-      String.fromCharCode(...new Uint8Array(arrayBuffer))
-    );
+    // Load the image as a base64 string
+    const imageBase64 = await fetch(chosenImage.value)
+      .then((response) => response.arrayBuffer())
+      .then((arrayBuffer) => Base64.fromByteArray(new Uint8Array(arrayBuffer)));
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({
