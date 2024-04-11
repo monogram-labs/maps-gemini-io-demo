@@ -5,6 +5,7 @@ import {
   HarmCategory,
 } from "@google/generative-ai";
 import { Loader } from "@googlemaps/js-api-loader";
+import Base64 from "base64-js";
 import "./style.css";
 
 // TODO: rewrite to mention integrations panel?
@@ -86,9 +87,7 @@ form.addEventListener("submit", async (e) => {
     // Load the image as a base64 string
     const imageBase64 = await fetch(chosenImage.value)
       .then((response) => response.arrayBuffer())
-      .then((arrayBuffer) =>
-        btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
-      );
+      .then((arrayBuffer) => Base64.fromByteArray(new Uint8Array(arrayBuffer)));
 
     // Assemble the prompt by combining the text with the chosen image
     const contents: GenerateContentRequest["contents"] = [
