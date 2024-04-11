@@ -242,7 +242,7 @@ async function findNearbyLodging(location: google.maps.LatLng) {
     places.forEach((place) => {
       // TODO: @Sami we can customize pin
       const pin = document.createElement("img");
-      pin.src = "/assets/location-pin.svg";
+      pin.src = "/location-pin.svg";
       pin.height = 30;
 
       const markerView = new AdvancedMarkerElement({
