@@ -103,6 +103,8 @@ async function geocodePlace(name: string) {
     
     map?.setCenter(geocodedPlace.geometry.location);
     map?.fitBounds(geocodedPlace.geometry.viewport);
+
+    // TODO: @Sami please let us know if you would like to style marker and display info window for main location
     new AdvancedMarkerElement({
       map,
       position: geocodedPlace.geometry.location,
@@ -189,7 +191,7 @@ async function findNearbyLodging(location: google.maps.LatLng) {
               place.photos
                 ? `
                   <p>Photos</p>
-                  ${place.photos?.slice(0, maxPhotosCount).map((photo, index) => `<img class="info-window-photo" src="${photo.getURI()}" alt="${place.displayName} - ${index}">`)}
+                  ${place.photos.slice(0, maxPhotosCount).map((photo, index) => `<img class="info-window-photo" src="${photo.getURI()}" alt="${place.displayName} - ${index}">`)}
                 `
                 : ``
             }
@@ -199,7 +201,7 @@ async function findNearbyLodging(location: google.maps.LatLng) {
                 ? `
                   <p>Reviews</p>
                   <ul>
-                  ${place.reviews?.slice(0, maxReviewsCount).map(review => `
+                  ${place.reviews.slice(0, maxReviewsCount).map(review => `
                     <li>
                       <p class="review-text">${review.text}</p>
                       <p class="review-author">${review.authorAttribution?.displayName}</p>
