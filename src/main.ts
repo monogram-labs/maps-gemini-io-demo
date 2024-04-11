@@ -130,7 +130,7 @@ form.addEventListener("submit", async (e) => {
       await findNearbyLodging(place.geometry.location);
     }
   } catch (e: unknown) {
-    output.innerHTML += `<hr> + ${e instanceof Error ? e.message : e}`;
+    output.innerHTML += `<hr> ${e instanceof Error ? e.message : e}`;
   }
 });
 
