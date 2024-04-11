@@ -127,6 +127,9 @@ form.addEventListener("submit", async (e) => {
     if (place) {
       // Find nearby lodging
       await findNearbyLodging(place.geometry.location);
+      
+      // Fetch and display weather
+      await getWeather(place.geometry.location, placeName); 
     }
   } catch (e: unknown) {
     output.innerHTML += `<hr> ${e instanceof Error ? e.message : e}`;
@@ -316,3 +319,111 @@ async function findNearbyLodging(location: google.maps.LatLng) {
     console.log("No results");
   }
 }
+
+async function getWeather(location: google.maps.LatLng, placeName: string) {
+  
+  console.log(location);
+  // Note: this was failing to fetch the right location just using q with lat, long
+  // const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=7c3f590507564f1a89c204709241104&q=${location.lat},${location.lng}&days=1&aqi=no&alerts=no`;
+  const apiKey = "7c3f590507564f1a89c204709241104";
+  // const apiKey = "not a real api key"; // Intentional for DevTools demo
+  const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${placeName}&days=1&aqi=no&alerts=no`;
+
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error("Failed to fetch weather data");
+    }
+    const data = await response.json();
+
+    const weatherInfoDiv = document.querySelector(".weather-info");
+    if (!weatherInfoDiv) {
+      throw new Error(".weather-info element not found");
+    }
+
+    // Extract relevant weather data
+    const currentCondition = data.current.condition;
+    const currentTemp = data.current.temp_c;
+    // const locationName = data.location.name;
+    const iconUrl = `https:${currentCondition.icon}`; // Assuming icon URL requires https://
+
+    // Create HTML elements to display weather information
+    const locationElement = document.createElement("p");
+    // Note: POSSIBLE BUG IN THE API WITH LAT LONG
+    locationElement.textContent = `Weather in ${placeName}:`;
+
+    const iconElement = document.createElement("img");
+    iconElement.src = iconUrl;
+    iconElement.alt = currentCondition.text;
+
+    const tempElement = document.createElement("p");
+    tempElement.textContent = `${currentTemp}°C and ${currentCondition.text}`;
+
+    // Clear previous weather info and append new elements
+    weatherInfoDiv.innerHTML = "";
+    weatherInfoDiv.appendChild(locationElement);
+    weatherInfoDiv.appendChild(iconElement);
+    weatherInfoDiv.appendChild(tempElement);
+
+  } catch (error) {
+    console.error("Error fetching weather:", error);
+    // Handle error display (e.g., show an error message in the .weather-info div)
+  }
+}
+
+
+
+/*
+Introducing a Feature with a CORS Issue
+Let's add a small feature that fetches weather information for the identified location using a third-party weather API. This API will be assumed to have CORS restrictions, creating the desired scenario.
+1. Add Weather Feature:
+HTML Modification: Add a new element to display the weather information within your HTML, perhaps below the place name output:
+<div class="weather-info">
+  <!-- Weather data will be displayed here -->
+</div>
+Use code with caution.
+Html
+JavaScript Function: Implement a function to fetch weather data using the Fetch API. We'll use a placeholder API endpoint for demonstration, assuming it has CORS restrictions:
+
+async function getWeather(location) {
+  const apiKey = "YOUR_WEATHER_API_KEY"; // Replace with your actual API key
+  const apiUrl = `https://weather-api.example.com/weather?lat=${location.lat}&lon=${location.lng}&appid=${apiKey}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error("Failed to fetch weather data");
+    }
+    const data = await response.json();
+    // Process and display weather data in the .weather-info element
+  } catch (error) {
+    console.error("Error fetching weather:", error);
+    // Handle error display
+  }
+}
+Use code with caution.
+JavaScript
+2. Integrate with Geocoding:
+Call the getWeather function after successfully geocoding the place:
+async function geocodePlace(name: string) {
+  // ... existing geocoding logic ...
+
+  if (place) {
+    // ... existing lodging search ... 
+
+    // Fetch and display weather
+    await getWeather(place.geometry.location); 
+  }
+}
+Use code with caution.
+JavaScript
+3. Observe the CORS Error:
+When you run the application, the weather data fetch will likely fail due to CORS restrictions. The browser console will display an error similar to the one mentioned earlier.
+4. Fixing the CORS Issue (Specific to Weather API):
+API Provider's Documentation: Refer to the documentation of the specific weather API you choose. They might provide guidance on enabling CORS or offer alternative solutions like JSONP or server-side proxy implementations.
+Contact API Provider: If the documentation is unclear or CORS support seems unavailable, consider contacting the API provider for assistance or exploring alternative weather APIs with CORS capabilities.
+Remember:
+Replace YOUR_WEATHER_API_KEY and https://weather-api.example.com/ with actual values from a chosen weather API.
+Implement error handling to gracefully display messages to the user if the weather data cannot be fetched due to CORS or other issues.
+By adding this feature and simulating the CORS issue, you can practice handling and resolving such scenarios in your web development projects.
+*/

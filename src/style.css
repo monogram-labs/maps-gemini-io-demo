@@ -188,3 +188,9 @@ button:hover {
 .info-window-photo {
   height: 100px;
 }
+
+.weather-info {
+  border-radius: 8px;
+  border: 2px solid var(--accent-color);
+  padding: 4px;
+}
