@@ -185,19 +185,30 @@ async function findNearbyLodging(location: google.maps.LatLng) {
             <p class="place-address">${place.formattedAddress ?? ''}</p>
             <p class="place-rating">${place.rating} stars</p>
             
-            <p>Photos</p>
             ${
-              place.photos?.slice(0, maxPhotosCount).map((photo, index) => `<img class="info-window-photo" src="${photo.getURI()}" alt="${place.displayName} - ${index}">`)
+              place.photos
+                ? `
+                  <p>Photos</p>
+                  ${place.photos?.slice(0, maxPhotosCount).map((photo, index) => `<img class="info-window-photo" src="${photo.getURI()}" alt="${place.displayName} - ${index}">`)}
+                `
+                : ``
             }
-            <p>Reviews</p>
-            <ul>
-              ${place.reviews?.slice(0, maxReviewsCount).map(review => `
-                <li>
-                  <p class="review-text">${review.text}</p>
-                  <p class="review-author">${review.authorAttribution?.displayName}</p>
-                  <p class="review-stars">${review.rating} stars</p>
-                </li>`).join('')}
-            </ul>
+
+            ${
+              place.reviews
+                ? `
+                  <p>Reviews</p>
+                  <ul>
+                  ${place.reviews?.slice(0, maxReviewsCount).map(review => `
+                    <li>
+                      <p class="review-text">${review.text}</p>
+                      <p class="review-author">${review.authorAttribution?.displayName}</p>
+                      <p class="review-stars">${review.rating} stars</p>
+                    </li>`).join('')}
+                  </ul>
+                `
+                : ``
+            }
           </div>`
         );
         // Open the info window on the map.
