@@ -131,6 +131,9 @@ form.addEventListener("submit", async (e) => {
       // Fetch and display weather
       await getWeather(place.geometry.location, placeName); 
     }
+
+    // Save placeName for usage later
+    localStorage.setItem("placeName", placeName);
   } catch (e: unknown) {
     output.innerHTML += `<hr> ${e instanceof Error ? e.message : e}`;
   }
@@ -325,8 +328,8 @@ async function getWeather(location: google.maps.LatLng, placeName: string) {
   console.log(location);
   // Note: this was failing to fetch the right location just using q with lat, long
   // const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=7c3f590507564f1a89c204709241104&q=${location.lat},${location.lng}&days=1&aqi=no&alerts=no`;
-  const apiKey = "7c3f590507564f1a89c204709241104";
-  // const apiKey = "not a real api key"; // Intentional for DevTools demo
+  // const apiKey = "7c3f590507564f1a89c204709241104";
+  const apiKey = "not a real api key"; // Intentional for DevTools demo
   const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${placeName}&days=1&aqi=no&alerts=no`;
 
   try {

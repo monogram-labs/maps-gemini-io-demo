@@ -190,6 +190,12 @@ button:hover {
 }
 
 .weather-info {
+  /* border-radius: 8px; */
+  /* border: 2px solid var(--accent-color); */
+  padding: 4px;
+}
+
+.tone-info {
   border-radius: 8px;
   border: 2px solid var(--accent-color);
   padding: 4px;

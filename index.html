@@ -35,16 +35,53 @@
       </div>
     </form>
     <p class="output">(Results will appear here)</p>
-    
+
     <div class="weather-info">
       <!-- Weather data will be displayed here -->
     </div>
-  </main>
+
 
 
   <div id="map"></div>
-  
+
+
+    <!-- Reviews -->
+    <h2>Trip review:</h2>
+    <div class="reviews">
+      <div id="validate-model"></div>
+      <div id="model-wrapper">
+        <input type="text" hidden id="prompt-title" placeholder="Review title" style="width:100%;">
+        <textarea id="prompt-text" rows="10" cols="50" placeholder="Write review here" id="prompt-text">
+          I recently returned from a delightful trip here and I can't recommend it enough! This sunny location proved to be the perfect place to unwind and soak up some rays.
+
+          From the moment I arrived, I was struck by the warmth and hospitality of the local people. Everyone I encountered, from shopkeepers to fellow tourists, seemed genuinely friendly and helpful. The positive energy was contagious!
+          
+          I was thrilled with the culinary scene. The restaurants offered a fantastic mix of fresh, flavorful dishes featuring local ingredients. Whether I was craving [type of food] or something more adventurous, I found delicious options at every turn.
+          
+          Of course, the main draw of this trip was the stunning scenery. I spent hours exploring the landscape - beaches, mountains, etc. The natural beauty of the area was simply breathtaking.
+          
+          Overall, this trip was everything I could have hoped for and more. It's a place I'd love to visit again and a destination I wholeheartedly recommend to anyone seeking a balance of relaxation, good food, and friendly faces.
+      </textarea>
+        <br />
+        <button id="ai-button" hidden>Run AI</button>
+        <button id="ai-button-stream" hidden>Run AI Stream</button>
+        <button id="generate-title">Generate Title</button>
+        <button id="rewrite-review">Summarize</button>
+        <button id="check-toxicity">Check Tone</button>
+
+        <h3>Prettier version:</h3>
+        <p id="ai-output"></p>
+        <p id="ai-output-stream"></p>
+        <p id="ai-output-tone"></p>
+        <button id="clear">Clear</button>
+      </div>
+      <!-- end reviews -->
+    </div>
+
+  </main>
+
   <script type="module" src="/src/main.ts"></script>
+  <script type="module" src="/src/travel.js"></script>
 </body>
 
 </html>
