@@ -1,87 +1,112 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/gemini.png" />
+    <title>Traveling with Gemini and Google Maps</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="/gemini.png" />
-  <title>Traveling with Gemini and Google Maps</title>
-</head>
-
-<body>
-  <main>
-    <h1>Traveling with Gemini and Google Maps</h1>
-    <form>
-      <div class="image-picker">
-        <label class="image-choice">
-          <input type="radio" checked name="chosen-image" value="/lakebaikal.jpeg">
-          <img src="/lakebaikal.jpeg">
-        </label>
-        <label class="image-choice">
-          <input type="radio" name="chosen-image" value="/powder-skiing.jpeg">
-          <img src="/powder-skiing.jpeg">
-        </label>
-        <label class="image-choice">
-          <input type="radio" name="chosen-image" value="/redwood-forest-hike.jpeg">
-          <img src="/redwood-forest-hike.jpeg">
-        </label>
-      </div>
-      <div class="prompt-box">
-        <!-- <label>
+  <body>
+    <main>
+      <h1>Traveling with Gemini and Google Maps</h1>
+      <form>
+        <div class="image-picker">
+          <label class="image-choice">
+            <input
+              type="radio"
+              checked
+              name="chosen-image"
+              value="/lakebaikal.jpeg"
+            />
+            <img src="/lakebaikal.jpeg" />
+          </label>
+          <label class="image-choice">
+            <input
+              type="radio"
+              name="chosen-image"
+              value="/powder-skiing.jpeg"
+            />
+            <img src="/powder-skiing.jpeg" />
+          </label>
+          <label class="image-choice">
+            <input
+              type="radio"
+              name="chosen-image"
+              value="/redwood-forest-hike.jpeg"
+            />
+            <img src="/redwood-forest-hike.jpeg" />
+          </label>
+        </div>
+        <div class="prompt-box">
+          <!-- <label>
           <input name="prompt" placeholder="Where do you want to go" type="text"
             value="Where can I see this place? Just the place name, please.">
         </label> -->
-        <button type="submit">Where can I see this?</button>
-      </div>
-    </form>
-    <p class="output">(Results will appear here)</p>
+          <button type="submit">Where can I see this?</button>
+        </div>
+      </form>
 
-    <div class="weather-info">
-      <!-- Weather data will be displayed here -->
-    </div>
+      <section class="map-container">
+        <p class="output">(Results will appear here)</p>
 
+        <div class="weather-info">
+          <!-- Weather data will be displayed here -->
+        </div>
 
+        <div id="map"></div>
+      </section>
 
-  <div id="map"></div>
+      <!-- Reviews -->
+      <section class="trip-review">
+        <h2>Trip review:</h2>
+        <div class="reviews">
+          <div id="validate-model"></div>
+          <div id="model-wrapper">
+            <input
+              type="text"
+              hidden
+              id="prompt-title"
+              placeholder="Review title"
+            />
+            <textarea
+              id="prompt-text"
+              rows="10"
+              cols="50"
+              placeholder="Write review here"
+              id="prompt-text"
+            >
+I recently returned from a delightful trip here and I can't recommend it enough! This sunny location proved to be the perfect place to unwind and soak up some rays.
 
-
-    <!-- Reviews -->
-    <h2>Trip review:</h2>
-    <div class="reviews">
-      <div id="validate-model"></div>
-      <div id="model-wrapper">
-        <input type="text" hidden id="prompt-title" placeholder="Review title" style="width:100%;">
-        <textarea id="prompt-text" rows="10" cols="50" placeholder="Write review here" id="prompt-text">
-          I recently returned from a delightful trip here and I can't recommend it enough! This sunny location proved to be the perfect place to unwind and soak up some rays.
-
-          From the moment I arrived, I was struck by the warmth and hospitality of the local people. Everyone I encountered, from shopkeepers to fellow tourists, seemed genuinely friendly and helpful. The positive energy was contagious!
+From the moment I arrived, I was struck by the warmth and hospitality of the local people. Everyone I encountered, from shopkeepers to fellow tourists, seemed genuinely friendly and helpful. The positive energy was contagious!
           
-          I was thrilled with the culinary scene. The restaurants offered a fantastic mix of fresh, flavorful dishes featuring local ingredients. Whether I was craving [type of food] or something more adventurous, I found delicious options at every turn.
+I was thrilled with the culinary scene. The restaurants offered a fantastic mix of fresh, flavorful dishes featuring local ingredients. Whether I was craving [type of food] or something more adventurous, I found delicious options at every turn.
           
-          Of course, the main draw of this trip was the stunning scenery. I spent hours exploring the landscape - beaches, mountains, etc. The natural beauty of the area was simply breathtaking.
+Of course, the main draw of this trip was the stunning scenery. I spent hours exploring the landscape - beaches, mountains, etc. The natural beauty of the area was simply breathtaking.
           
-          Overall, this trip was everything I could have hoped for and more. It's a place I'd love to visit again and a destination I wholeheartedly recommend to anyone seeking a balance of relaxation, good food, and friendly faces.
-      </textarea>
-        <br />
-        <button id="ai-button" hidden>Run AI</button>
-        <button id="ai-button-stream" hidden>Run AI Stream</button>
-        <button id="generate-title">Generate Title</button>
-        <button id="rewrite-review">Summarize</button>
-        <button id="check-toxicity">Check Tone</button>
+Overall, this trip was everything I could have hoped for and more. It's a place I'd love to visit again and a destination I wholeheartedly recommend to anyone seeking a balance of relaxation, good food, and friendly faces.
+      </textarea
+            >
+            <br />
 
-        <h3>Prettier version:</h3>
-        <p id="ai-output"></p>
-        <p id="ai-output-stream"></p>
-        <p id="ai-output-tone"></p>
-        <button id="clear">Clear</button>
-      </div>
-      <!-- end reviews -->
-    </div>
+            <button id="ai-button" hidden>Run AI</button>
+            <button id="ai-button-stream" hidden>Run AI Stream</button>
+            <button id="generate-title">Generate Title</button>
+            <button id="rewrite-review">Summarize</button>
+            <button id="check-toxicity">Check Tone</button>
 
-  </main>
+            <h3>Prettier version:</h3>
+            <p id="ai-output"></p>
+            <p id="ai-output-stream"></p>
+            <p id="ai-output-tone"></p>
+            <button id="clear">Clear</button>
+          </div>
+          <!-- end reviews -->
+        </div>
+      </section>
+    </main>
 
-  <script type="module" src="/src/main.ts"></script>
-  <script type="module" src="/src/travel.js"></script>
-</body>
-
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/travel.js"></script>
+  </body>
 </html>

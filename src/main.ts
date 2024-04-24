@@ -127,9 +127,9 @@ form.addEventListener("submit", async (e) => {
     if (place) {
       // Find nearby lodging
       await findNearbyLodging(place.geometry.location);
-      
+
       // Fetch and display weather
-      await getWeather(place.geometry.location, placeName); 
+      await getWeather(place.geometry.location, placeName);
     }
 
     // Save placeName for usage later
@@ -264,21 +264,25 @@ async function findNearbyLodging(location: google.maps.LatLng) {
         infoWindow.setContent(
           `<div class="info-window-content">
             <p class="place-name">${place.displayName}</p>
-            <p class="place-address">${place.formattedAddress ?? ""}</p>
-            <p class="place-rating">${place.rating} stars</p>
+            <div class="place-info">
+              <p class="place-address">${place.formattedAddress ?? ""}</p>
+              <p class="place-rating">${place.rating} stars</p>
+            </div>
             
             ${
               place.photos
                 ? `
-                  <p>Photos</p>
-                  ${place.photos
-                    .slice(0, maxPhotosCount)
-                    .map(
-                      (photo, index) =>
-                        `<img class="info-window-photo" src="${photo.getURI()}" alt="${
-                          place.displayName
-                        } - ${index}">`
-                    )}
+                  <p class="place-subheading">Photos</p>
+                  <div class="place-photos">
+                    ${place.photos
+                      .slice(0, maxPhotosCount)
+                      .map(
+                        (photo, index) =>
+                          `<img class="info-window-photo" src="${photo.getURI()}" alt="${
+                            place.displayName
+                          } - ${index}">`
+                      )}
+                  </div>
                 `
                 : ``
             }
@@ -286,20 +290,19 @@ async function findNearbyLodging(location: google.maps.LatLng) {
             ${
               place.reviews
                 ? `
-                  <p>Reviews</p>
-                  <ul>
+                  <p class="place-subheading">Reviews</p>
+
                   ${place.reviews
                     .slice(0, maxReviewsCount)
                     .map(
                       (review) => `
-                    <li>
-                      <p class="review-text">${review.text}</p>
-                      <p class="review-author">${review.authorAttribution?.displayName}</p>
-                      <p class="review-stars">${review.rating} stars</p>
-                    </li>`
+                      <div class="review-info">
+                        <p class="review-author">${review.authorAttribution?.displayName}</p>
+                        <p class="place-rating">${review.rating} stars</p>
+                      </div>
+                      <p class="review-text">${review.text}</p>`
                     )
                     .join("")}
-                  </ul>
                 `
                 : ``
             }
@@ -324,7 +327,6 @@ async function findNearbyLodging(location: google.maps.LatLng) {
 }
 
 async function getWeather(location: google.maps.LatLng, placeName: string) {
-  
   console.log(location);
   // Note: this was failing to fetch the right location just using q with lat, long
   // const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=7c3f590507564f1a89c204709241104&q=${location.lat},${location.lng}&days=1&aqi=no&alerts=no`;
@@ -367,7 +369,6 @@ async function getWeather(location: google.maps.LatLng, placeName: string) {
     weatherInfoDiv.appendChild(locationElement);
     weatherInfoDiv.appendChild(iconElement);
     weatherInfoDiv.appendChild(tempElement);
-
   } catch (error) {
     console.error("Error fetching weather:", error);
     // Handle error display (e.g., show an error message in the .weather-info div)
