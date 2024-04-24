@@ -47,19 +47,35 @@
         </div>
       </form>
 
-      <section class="map-container">
-        <p class="output">(Results will appear here)</p>
+      <section class="container">
+        <div class="container-header">
+          <h2>Trip results</h2>
 
-        <div class="weather-info">
-          <!-- Weather data will be displayed here -->
+          <div class="weather-info">
+            <!-- Weather data will be displayed here -->
+          </div>
+
+          <div class="buttons-container">
+            <p class="output">(Results will appear here)</p>
+          </div>
         </div>
 
         <div id="map"></div>
       </section>
 
       <!-- Reviews -->
-      <section class="trip-review">
-        <h2>Trip review:</h2>
+      <section class="container">
+        <div class="container-header">
+          <h2>Trip review</h2>
+          <div class="buttons-container">
+            <button id="ai-button" hidden>Run AI</button>
+            <button id="ai-button-stream" hidden>Run AI Stream</button>
+            <button id="generate-title">Generate Title</button>
+            <button id="rewrite-review">Summarize</button>
+            <button id="check-toxicity">Check Tone</button>
+          </div>
+        </div>
+
         <div class="reviews">
           <div id="validate-model"></div>
           <div id="model-wrapper">
@@ -87,23 +103,24 @@ Of course, the main draw of this trip was the stunning scenery. I spent hours ex
 Overall, this trip was everything I could have hoped for and more. It's a place I'd love to visit again and a destination I wholeheartedly recommend to anyone seeking a balance of relaxation, good food, and friendly faces.
       </textarea
             >
-            <br />
-
-            <button id="ai-button" hidden>Run AI</button>
-            <button id="ai-button-stream" hidden>Run AI Stream</button>
-            <button id="generate-title">Generate Title</button>
-            <button id="rewrite-review">Summarize</button>
-            <button id="check-toxicity">Check Tone</button>
-
-            <h3>Prettier version:</h3>
-            <p id="ai-output"></p>
-            <p id="ai-output-stream"></p>
-            <p id="ai-output-tone"></p>
-            <button id="clear">Clear</button>
           </div>
-          <!-- end reviews -->
         </div>
       </section>
+
+      <section class="container">
+        <div class="container-header">
+          <h2>Prettier version:</h2>
+          <div class="buttons-container">
+            <button id="clear">Clear</button>
+          </div>
+        </div>
+        <div class="content">
+          <p id="ai-output"></p>
+          <p id="ai-output-stream"></p>
+          <p id="ai-output-tone"></p>
+        </div>
+      </section>
+      <!-- end reviews -->
     </main>
 
     <script type="module" src="/src/main.ts"></script>

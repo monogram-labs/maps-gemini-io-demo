@@ -74,7 +74,11 @@ initMap();
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  output.textContent = "Generating...";
+  output.innerHTML = `<div class="loading">
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    </div> Generating...`;
 
   try {
     const chosenImage = form.elements.namedItem(
@@ -266,7 +270,7 @@ async function findNearbyLodging(location: google.maps.LatLng) {
             <p class="place-name">${place.displayName}</p>
             <div class="place-info">
               <p class="place-address">${place.formattedAddress ?? ""}</p>
-              <p class="place-rating">${place.rating} stars</p>
+              <p class="place-rating">Rating: ${place.rating}/5</p>
             </div>
             
             ${
@@ -281,11 +285,12 @@ async function findNearbyLodging(location: google.maps.LatLng) {
                           `<img class="info-window-photo" src="${photo.getURI()}" alt="${
                             place.displayName
                           } - ${index}">`
-                      )}
+                      )
+                      .join("")}
                   </div>
                 `
                 : ``
-            }
+            }            
 
             ${
               place.reviews
@@ -296,11 +301,13 @@ async function findNearbyLodging(location: google.maps.LatLng) {
                     .slice(0, maxReviewsCount)
                     .map(
                       (review) => `
-                      <div class="review-info">
-                        <p class="review-author">${review.authorAttribution?.displayName}</p>
-                        <p class="place-rating">${review.rating} stars</p>
-                      </div>
-                      <p class="review-text">${review.text}</p>`
+                      <div class="review">
+                        <div class="review-info">
+                          <p class="review-author">${review.authorAttribution?.displayName}</p>
+                          <p class="place-rating">Rating: ${review.rating}/5</p>
+                        </div>
+                        <p class="review-text">${review.text}</p>
+                      </div>`
                     )
                     .join("")}
                 `
