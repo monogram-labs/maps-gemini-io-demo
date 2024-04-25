@@ -267,16 +267,16 @@ async function findNearbyLodging(location: google.maps.LatLng) {
         // TODO: @Sami we can style info window
         infoWindow.setContent(
           `<div class="info-window-content">
-            <p class="place-name">${place.displayName}</p>
             <div class="place-info">
-              <p class="place-address">${place.formattedAddress ?? ""}</p>
-              <p class="place-rating">Rating: ${place.rating}/5</p>
+              <h2 class="place-name">${place.displayName}</h2>
+              <div class="stars" style="--rating:${place.rating}"></div>
             </div>
+            <p class="place-address">${place.formattedAddress ?? ""}</p>
             
             ${
               place.photos
                 ? `
-                  <p class="place-subheading">Photos</p>
+                  <h3 class="place-subheading">Photos</h3>
                   <div class="place-photos">
                     ${place.photos
                       .slice(0, maxPhotosCount)
@@ -295,18 +295,18 @@ async function findNearbyLodging(location: google.maps.LatLng) {
             ${
               place.reviews
                 ? `
-                  <p class="place-subheading">Reviews</p>
+                  <h3 class="place-subheading">${
+                    place.reviews.length - 2
+                  } Reviews</h3>
 
                   ${place.reviews
                     .slice(0, maxReviewsCount)
                     .map(
                       (review) => `
                       <div class="review">
-                        <div class="review-info">
-                          <p class="review-author">${review.authorAttribution?.displayName}</p>
-                          <p class="place-rating">Rating: ${review.rating}/5</p>
-                        </div>
+                        <div class="stars" style="--rating:${place.rating}"></div>
                         <p class="review-text">${review.text}</p>
+                        <p class="review-author">by ${review.authorAttribution?.displayName}</p>
                       </div>`
                     )
                     .join("")}
