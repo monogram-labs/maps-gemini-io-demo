@@ -61,6 +61,7 @@ async function initMap() {
       zoom: 2,
       mapTypeId: "satellite",
       mapId: "DEMO_MAP_ID",
+      disableDefaultUI: true,
     });
 
     return map;

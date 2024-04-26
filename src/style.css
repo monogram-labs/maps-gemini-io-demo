@@ -167,6 +167,11 @@ button:active {
 }
 
 .output {
+  display: flex;
+  gap: 8px;
+}
+
+.weather-info {
   border: 1px solid var(--border);
   position: relative;
   font-size: 16px;
@@ -174,8 +179,6 @@ button:active {
   margin: 0;
   border-radius: 10px;
   width: fit-content;
-  display: flex;
-  gap: 8px;
   padding: 6px 8px;
   align-items: center;
 }
@@ -308,12 +311,6 @@ button:hover {
 
 .review-author {
   font-weight: 600;
-}
-
-.weather-info {
-  /* border-radius: 8px; */
-  /* border: 2px solid var(--accent-color); */
-  padding: 4px;
 }
 
 .tone-info {
