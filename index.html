@@ -51,10 +51,8 @@
         <div class="container-header">
           <h2>Trip results</h2>
 
-          <div class="buttons-container">
-            <p class="output">(Results will appear here)</p>
-            <!-- <div class="weather-info">Weather data will be displayed here</div> -->
-          </div>
+          <p class="output">(Results will appear here)</p>
+          <!-- <div class="weather-info">Weather data will be displayed here</div> -->
         </div>
 
         <div id="map"></div>
@@ -104,7 +102,7 @@ Overall, this trip was everything I could have hoped for and more. It's a place 
         </div>
       </section>
 
-      <section class="container">
+      <section class="container" id="prettier-version">
         <div class="container-header">
           <h2>Prettier version</h2>
           <div class="buttons-container">
@@ -112,7 +110,9 @@ Overall, this trip was everything I could have hoped for and more. It's a place 
           </div>
         </div>
         <div class="content">
-          <p id="ai-output"></p>
+          <p id="ai-output">
+            <span class="ai-output-placeholder">(Results will be here)</span>
+          </p>
           <p id="ai-output-stream"></p>
           <p id="ai-output-tone"></p>
         </div>

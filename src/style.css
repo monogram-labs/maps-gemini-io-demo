@@ -167,6 +167,7 @@ button:active {
 }
 
 .output {
+  border: 1px solid var(--border);
   position: relative;
   font-size: 16px;
   font-weight: 500;
@@ -175,7 +176,7 @@ button:active {
   width: fit-content;
   display: flex;
   gap: 8px;
-  padding: 0 4px;
+  padding: 6px 8px;
   align-items: center;
 }
 
@@ -212,7 +213,7 @@ button {
   border: transparent;
   background: linear-gradient(
     to top right,
-    var(--accent-color),
+    var(--accent-color) 60%,
     var(--accent-secondary)
   );
   color: white;
@@ -371,12 +372,20 @@ button:hover {
   height: fit-content;
 }
 
+.loading-container,
+.ai-output-placeholder {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-weight: 500;
+}
+
 .loading {
   align-items: center;
   display: flex;
   justify-content: center;
-  height: 100%;
-  width: 100%;
 }
 
 .loading-dot {
