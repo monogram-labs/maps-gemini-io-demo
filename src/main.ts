@@ -5,6 +5,7 @@ import {
   HarmCategory,
 } from "@google/generative-ai";
 import { Loader } from "@googlemaps/js-api-loader";
+import "@googlemaps/extended-component-library/place_overview.js";
 import Base64 from "base64-js";
 import "./style.css";
 
@@ -24,6 +25,7 @@ const MAPS_API_KEY = "AIzaSyDe61wuiQ3lr8AL9FSxhVTanI4pyD7sG28";
 const loader = new Loader({
   apiKey: MAPS_API_KEY,
   version: "weekly",
+  libraries: ["places"],
 });
 
 const form: HTMLFormElement | null = document.querySelector("form");
@@ -74,6 +76,13 @@ initMap();
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  const placeResult = await geocodePlace(placeName);
+  if (placeResult) {
+    const placeId = placeResult.place_id;
+    await findNearbyLodging(placeResult.geometry.location);
+    localStorage.setItem("placeId", placeId);
+  }
 
   output.innerHTML = `<div class="loading">
     <span class="loading-dot"></span>
@@ -169,10 +178,8 @@ async function geocodePlace(
   try {
     const { results } = await geocoder.geocode(request);
     const geocodedPlace = results[0];
-
     map.setCenter(geocodedPlace.geometry.location);
     map.fitBounds(geocodedPlace.geometry.viewport);
-
     // TODO: @Sami please let us know if you would like to style marker and display info window for main location
     new AdvancedMarkerElement({
       map,
@@ -182,7 +189,7 @@ async function geocodePlace(
 
     return geocodedPlace;
   } catch (error) {
-    console.log(
+    console.error(
       "Geocode was not successful for the following reason: " + error
     );
   }
@@ -263,61 +270,11 @@ async function findNearbyLodging(location: google.maps.LatLng) {
       });
 
       markerView.addListener("click", () => {
-        const maxPhotosCount = 2;
-        const maxReviewsCount = 3;
-        // TODO: @Sami we can style info window
+        const placeId = localStorage.getItem("placeId");
         infoWindow.setContent(
-          `<div class="info-window-content">
-            <div class="place-info">
-              <h2 class="place-name">${place.displayName}</h2>
-              <div class="stars" style="--rating:${place.rating}"></div>
-            </div>
-            <p class="place-address">${place.formattedAddress ?? ""}</p>
-            
-            ${
-              place.photos
-                ? `
-                  <h3 class="place-subheading">Photos</h3>
-                  <div class="place-photos">
-                    ${place.photos
-                      .slice(0, maxPhotosCount)
-                      .map(
-                        (photo, index) =>
-                          `<img class="info-window-photo" src="${photo.getURI()}" alt="${
-                            place.displayName
-                          } - ${index}">`
-                      )
-                      .join("")}
-                  </div>
-                `
-                : ``
-            }            
-
-            ${
-              place.reviews
-                ? `
-                  <h3 class="place-subheading">${
-                    place.reviews.length - 2
-                  } Reviews</h3>
-
-                  ${place.reviews
-                    .slice(0, maxReviewsCount)
-                    .map(
-                      (review) => `
-                      <div class="review">
-                        <div class="stars" style="--rating:${place.rating}"></div>
-                        <p class="review-text">${review.text}</p>
-                        <p class="review-author">by ${review.authorAttribution?.displayName}</p>
-                      </div>`
-                    )
-                    .join("")}
-                `
-                : ``
-            }
-          </div>`
+          `<gmpx-api-loader key="${MAPS_API_KEY}" solution-channel="GMP_DOCS_placeoverview_v1"></gmpx-api-loader>
+          <gmpx-place-overview place="${placeId}" size="medium"></gmpx-place-overview>`
         );
-
-        // Open the info window on the map.
         infoWindow.open(map, markerView);
       });
 
@@ -382,3 +339,5 @@ async function getWeather(location: google.maps.LatLng, placeName: string) {
     // Handle error display (e.g., show an error message in the .weather-info div)
   }
 }
+
+document.body.appendChild(document.createElement("gmpx-place-overview"));
