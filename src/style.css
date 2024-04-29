@@ -138,6 +138,22 @@ button:active {
   position: absolute;
 }
 
+.image-choice figcaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: white;
+  font-size: xx-small;
+  opacity: 0.9;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.2rem 0.6rem;
+}
+
+.image-choice a {
+  color: var(--surface);
+}
+
 .image-choice:focus-within::after {
   box-shadow: 0 0 0 2.5px var(--accent-color) inset;
 }
