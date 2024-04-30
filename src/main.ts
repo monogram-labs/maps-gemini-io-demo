@@ -270,10 +270,9 @@ async function findNearbyLodging(location: google.maps.LatLng) {
       });
 
       markerView.addListener("click", () => {
-        const placeId = localStorage.getItem("placeId");
         infoWindow.setContent(
           `<gmpx-api-loader key="${MAPS_API_KEY}" solution-channel="GMP_DOCS_placeoverview_v1"></gmpx-api-loader>
-          <gmpx-place-overview place="${placeId}" size="medium"></gmpx-place-overview>`
+          <gmpx-place-overview place="${place.id}" size="x-large"></gmpx-place-overview>`
         );
         infoWindow.open(map, markerView);
       });
