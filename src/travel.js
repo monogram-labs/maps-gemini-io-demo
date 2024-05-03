@@ -42,6 +42,21 @@ async function checkBuiltInPrompting() {
   }
 }
 
+// Function to update the visibility of the clear button
+function updateClearButtonVisibility() {
+  const isPlaceholderVisible = outputHTML.innerHTML.includes(
+    "(Results will be here)"
+  );
+  clearButton.style.display = isPlaceholderVisible ? "none" : "block";
+}
+document.addEventListener("DOMContentLoaded", updateClearButtonVisibility);
+outputHTML.addEventListener("DOMSubtreeModified", updateClearButtonVisibility);
+clearButton.addEventListener("click", () => {
+  outputHTML.innerHTML = `<span class="ai-output-placeholder">(Results will be here)</span>`;
+  outputToneHTML.innerHTML = "";
+  updateClearButtonVisibility();
+});
+
 // Event listeners for buttons
 aiButton.addEventListener("click", () => runModel(false)); // Non-streaming
 aiButtonStream.addEventListener("click", () => runModel(true)); // Streaming
