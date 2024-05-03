@@ -44,10 +44,8 @@ async function checkBuiltInPrompting() {
 
 // Function to update the visibility of the clear button
 function updateClearButtonVisibility() {
-  const isPlaceholderVisible = outputHTML.innerHTML.includes(
-    "(Results will be here)"
-  );
-  clearButton.style.display = isPlaceholderVisible ? "none" : "block";
+  const noOutput = outputHTML.innerHTML.includes("(Results will be here)");
+  clearButton.style.display = noOutput ? "none" : "block";
 }
 document.addEventListener("DOMContentLoaded", updateClearButtonVisibility);
 outputHTML.addEventListener("DOMSubtreeModified", updateClearButtonVisibility);

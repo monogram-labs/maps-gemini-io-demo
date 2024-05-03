@@ -23,7 +23,7 @@ const GEMINI_API_KEY = "AIzaSyBK88lzuqZvl7EvL9qm1he1BiI7arO8mBY";
 // Open the Integrations panel to Enable the Maps JavaScript API
 // Get your Maps and Places API key at https://goo.gle/js-api-key
 // Be sure to enable Maps JavaScript API, Geocoding API, and Places API (New)
-const MAPS_API_KEY = "AIzaSyDe61wuiQ3lr8AL9FSxhVTanI4pyD7sG28";
+const MAPS_API_KEY = "AIzaSyCWFATm-_x_igtFE-dVHrMf2H_iZx25tKo";
 
 const form: HTMLFormElement | null = document.querySelector("form");
 if (!form) {
