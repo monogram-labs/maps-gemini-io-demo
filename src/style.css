@@ -342,32 +342,6 @@ button:hover {
   }
 }
 
-.stars {
-  --star: 16px;
-  width: calc(var(--n, 5) * var(--star));
-  height: calc(var(--star) * 0.9);
-  --v1: transparent, #000 0.5deg 108deg, #0000 109deg;
-  --v2: transparent, #000 0.5deg 36deg, #0000 37deg;
-  -webkit-mask: conic-gradient(
-      from 54deg at calc(var(--star) * 0.68) calc(var(--star) * 0.57),
-      var(--v1)
-    ),
-    conic-gradient(
-      from 90deg at calc(var(--star) * 0.02) calc(var(--star) * 0.35),
-      var(--v2)
-    ),
-    conic-gradient(
-      from 126deg at calc(var(--star) * 0.5) calc(var(--star) * 0.7),
-      var(--v1)
-    ),
-    conic-gradient(from 162deg at calc(var(--star) * 0.5) 0, var(--v2));
-  -webkit-mask-size: var(--star) var(--star);
-  -webkit-mask-composite: xor, destination-over;
-  mask-composite: exclude, add;
-  background: linear-gradient(#f79935 0 0) 0 /
-    calc(var(--rating, 0) * var(--star)) 100% no-repeat #ccc;
-}
-
 gmpx-split-layout {
   height: 500px;
   width: 100%;
