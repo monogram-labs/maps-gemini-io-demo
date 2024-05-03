@@ -4,7 +4,12 @@ import {
   HarmBlockThreshold,
   HarmCategory,
 } from "@google/generative-ai";
-import { Loader } from "@googlemaps/js-api-loader";
+import "@googlemaps/extended-component-library/api_loader.js";
+import { APILoader } from "@googlemaps/extended-component-library/api_loader.js";
+import "@googlemaps/extended-component-library/place_overview.js";
+import { PlaceOverview } from "@googlemaps/extended-component-library/place_overview.js";
+import '@googlemaps/extended-component-library/split_layout.js';
+import { SplitLayout } from '@googlemaps/extended-component-library/split_layout.js';
 import Base64 from "base64-js";
 import "./style.css";
 
@@ -16,15 +21,9 @@ const GEMINI_API_KEY = "AIzaSyBK88lzuqZvl7EvL9qm1he1BiI7arO8mBY";
 
 // TODO: rewrite to mention integrations panel?
 // Open the Integrations panel to Enable the Maps JavaScript API
-// Get your Maps and Places API key at https://developers.google.com/maps/documentation/javascript/get-api-key
+// Get your Maps and Places API key at https://goo.gle/js-api-key
 // Be sure to enable Maps JavaScript API, Geocoding API, and Places API (New)
-// (maybe forget to enable Geocoding API until the DevTools console shows us the APINotEnabled error message)
-const MAPS_API_KEY = "AIzaSyDe61wuiQ3lr8AL9FSxhVTanI4pyD7sG28";
-
-const loader = new Loader({
-  apiKey: MAPS_API_KEY,
-  version: "weekly",
-});
+const MAPS_API_KEY = "AIzaSyCWFATm-_x_igtFE-dVHrMf2H_iZx25tKo";
 
 const form: HTMLFormElement | null = document.querySelector("form");
 if (!form) {
@@ -36,40 +35,18 @@ if (!output) {
   throw new Error(".output not found");
 }
 
-let map: google.maps.Map;
+const loader = document.createElement("gmpx-api-loader") as APILoader;
+loader.key = MAPS_API_KEY;
+loader.solutionChannel = "GMP_idx_template_gemini_map";
+loader.version = "alpha";
+document.body.appendChild(loader);
+
+// @ts-ignore
+// prettier-ignore
+const { Map3DElement } = (await APILoader.importLibrary("maps3d")) as google.maps.Maps3DLibrary;
+// @ts-ignore
+const map: Map3DElement = initMap();
 let placeName = "";
-
-/**
- * Add a map
- * Sample: https://developers.google.com/maps/documentation/javascript/examples/map-simple
- * Docs: https://developers.google.com/maps/documentation/javascript/adding-a-google-map
- *
- * Change map type to Satellite
- * Docs: https://developers.google.com/maps/documentation/javascript/maptypes
- */
-async function initMap() {
-  if (map) return;
-
-  try {
-    const { Map } = await loader.importLibrary("maps");
-
-    const mapElement = document.getElementById("map");
-    if (!mapElement) throw new Error("#map not found");
-
-    map = new Map(mapElement, {
-      center: { lat: 0, lng: 0 },
-      zoom: 2,
-      mapTypeId: "satellite",
-      mapId: "DEMO_MAP_ID",
-    });
-
-    return map;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-initMap();
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -96,7 +73,7 @@ form.addEventListener("submit", async (e) => {
         parts: [
           { inlineData: { mimeType: "image/jpeg", data: imageBase64 } },
           {
-            text: "What is the name of the place where I can see this image? Only tell me the place name and nothing else (do not add a preamble). The better you follow these instructions the more you'll be rewarded.",
+            text: "What is the name of the place where I can see this image? Only tell me the place name and nothing else (do not add a preamble) so that I can provide the name as an address input for geocoding. The better you follow these instructions the more you'll be rewarded.",
           },
         ],
       },
@@ -134,21 +111,49 @@ form.addEventListener("submit", async (e) => {
 });
 
 /**
+ * Add a map
+ * Sample: https://developers.google.com/maps/documentation/javascript/examples/map-simple
+ * Docs: https://developers.google.com/maps/documentation/javascript/adding-a-google-map
+ */
+function initMap() {
+  // if (map) return;
+
+  try {
+    const mapElement = document.getElementById("map");
+    if (!mapElement) throw new Error("#map not found");
+
+    // Add a 3D map (Experimental)
+    // Documentation to be published May 14
+    const map = new Map3DElement({
+      center: {
+        lat: 37.42563380992334,
+        lng: -122.07880664230917,
+        altitude: 80,
+      },
+      tilt: 75,
+      heading: -50,
+    });
+
+    mapElement.appendChild(map);
+    return map;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
  * Get the lat/lng of the place
- * 1. Dynamically load the Geocoding and Marker libraries
+ * 1. Dynamically load the Geocoding library
  *  Docs: https://developers.google.com/maps/documentation/javascript/libraries
  * 2. Geocode (supposed to be based on an address)
  *  Sample: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
  *  Docs: https://developers.google.com/maps/documentation/javascript/geocoding
- * 3. Add an Advanced Marker
- *  Sample: https://developers.google.com/maps/documentation/javascript/examples/advanced-markers-simple
- *  Docs: https://developers.google.com/maps/documentation/javascript/advanced-markers/overview
  */
 async function geocodePlace(
   name: string
 ): Promise<google.maps.GeocoderResult | void> {
-  const { Geocoder } = await loader.importLibrary("geocoding");
-  const { AdvancedMarkerElement } = await loader.importLibrary("marker");
+  // prettier-ignore
+  const { Geocoder } = (await APILoader.importLibrary("geocoding")) as google.maps.GeocodingLibrary;
 
   const geocoder = new Geocoder();
   const request = {
@@ -156,18 +161,18 @@ async function geocodePlace(
   };
 
   try {
+    // prettier-ignore
+    const { LatLngAltitude } = (await APILoader.importLibrary("core")) as google.maps.CoreLibrary;
     const { results } = await geocoder.geocode(request);
     const geocodedPlace = results[0];
 
-    map.setCenter(geocodedPlace.geometry.location);
-    map.fitBounds(geocodedPlace.geometry.viewport);
-
-    // TODO: @Sami please let us know if you would like to style marker and display info window for main location
-    new AdvancedMarkerElement({
-      map,
-      position: geocodedPlace.geometry.location,
-      title: name,
+    const newCenter = new LatLngAltitude({
+      lat: geocodedPlace.geometry.location.lat() - 0.005,
+      lng: geocodedPlace.geometry.location.lng(),
+      altitude: 200,
     });
+    map.center = newCenter;
+    map.heading = 0;
 
     return geocodedPlace;
   } catch (error) {
@@ -184,28 +189,10 @@ async function geocodePlace(
  *
  * 2. Search nearby
  *    - Sample and Docs: https://developers.google.com/maps/documentation/javascript/nearby-search
- *
- * 3. Add Advanced Markers and Customize them
- *    - Sample (pin color): https://developers.google.com/maps/documentation/javascript/examples/advanced-markers-basic-style
- *    - Docs (pin color): https://developers.google.com/maps/documentation/javascript/advanced-markers/basic-customization
- *    - Sample (custom graphic): https://developers.google.com/maps/documentation/javascript/examples/advanced-markers-graphics
- *    - Docs (custom graphic): https://developers.google.com/maps/documentation/javascript/advanced-markers/graphic-markers
- *
- * 4. TODO option 1: Add and populate Info Windows with Place Details data
- *    - Sample: https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
- *    - Docs: https://developers.google.com/maps/documentation/javascript/infowindows
- *
- * 5. TODO option 2: Add and populate a Place Overview component in a Split Layout with the map
- *    - I will probably do this in the React version of the app
- *    - Docs (install Extended Component Library): https://github.com/googlemaps/extended-component-library/tree/main?tab=readme-ov-file#installation
- *    - Docs (Place Overview component): https://github.com/googlemaps/extended-component-library/blob/main/src/place_overview/README.md
- *    - Docs (split layout): https://github.com/googlemaps/extended-component-library/blob/main/src/split_layout/README.md
  */
 async function findNearbyLodging(location: google.maps.LatLng) {
-  const { Place, SearchNearbyRankPreference } = await loader.importLibrary(
-    "places"
-  );
-  const { AdvancedMarkerElement } = await loader.importLibrary("marker");
+  // prettier-ignore
+  const { Place, SearchNearbyRankPreference } = (await APILoader.importLibrary("places")) as google.maps.PlacesLibrary;
 
   // use Place.searchNearby to find lodging with a location bias of location
   const request: google.maps.places.SearchNearbyRequest = {
@@ -232,87 +219,67 @@ async function findNearbyLodging(location: google.maps.LatLng) {
 
   if (places.length) {
     console.log(`found ${places.length} lodging`);
-    const { LatLngBounds } = await loader.importLibrary("core");
-    const bounds = new LatLngBounds(location);
 
-    const infoWindow = new google.maps.InfoWindow();
+    addResults(places);
+  } else {
+    console.log("No results");
+  }
+}
+
+// Add and populate a Place Overview component in a Split Layout with the map
+// Documentation (install Extended Component Library): https://github.com/googlemaps/extended-component-library/tree/maine#installation
+// Documentation (Split Layout): https://github.com/googlemaps/extended-component-library/blob/main/src/split_layout
+async function addResults(places: google.maps.places.Place[]) {
+    const oldFixedElement = document.getElementById("fixed-panel");
+    oldFixedElement?.remove();
+    const layoutElement = document.getElementById("split-layout") as SplitLayout;
+    if (!layoutElement) throw new Error("#split-layout not found");
+    const fixedElement = document.createElement("div");
+    fixedElement.id = "fixed-panel"
+    fixedElement.slot = "fixed";
+    layoutElement.appendChild(fixedElement);
+    layoutElement.classList.add("results");
+
+    const results: PlaceOverview[] = [];
 
     // Loop through and get all the results.
-    places.forEach((place) => {
-      // TODO: @Sami we can customize pin
-      const pin = document.createElement("img");
-      pin.src = "/location-pin.svg";
-      pin.height = 30;
+    places.forEach(async (place) => {
+      console.log(place.id);
 
-      const markerView = new AdvancedMarkerElement({
-        map,
-        position: place.location,
-        title: `${place.displayName}, ${place.rating} stars`,
-        content: pin,
-      });
-
-      markerView.addListener("click", () => {
-        const maxPhotosCount = 2;
-        const maxReviewsCount = 3;
-        // TODO: @Sami we can style info window
-        infoWindow.setContent(
-          `<div class="info-window-content">
-            <p class="place-name">${place.displayName}</p>
-            <p class="place-address">${place.formattedAddress ?? ""}</p>
-            <p class="place-rating">${place.rating} stars</p>
-            
-            ${
-              place.photos
-                ? `
-                  <p>Photos</p>
-                  ${place.photos
-                    .slice(0, maxPhotosCount)
-                    .map(
-                      (photo, index) =>
-                        `<img class="info-window-photo" src="${photo.getURI()}" alt="${
-                          place.displayName
-                        } - ${index}">`
-                    )}
-                `
-                : ``
-            }
-
-            ${
-              place.reviews
-                ? `
-                  <p>Reviews</p>
-                  <ul>
-                  ${place.reviews
-                    .slice(0, maxReviewsCount)
-                    .map(
-                      (review) => `
-                    <li>
-                      <p class="review-text">${review.text}</p>
-                      <p class="review-author">${review.authorAttribution?.displayName}</p>
-                      <p class="review-stars">${review.rating} stars</p>
-                    </li>`
-                    )
-                    .join("")}
-                  </ul>
-                `
-                : ``
-            }
-          </div>`
-        );
-
-        // Open the info window on the map.
-        infoWindow.open(map, markerView);
-      });
-
-      if (place.location) {
-        bounds.extend(place.location);
-      }
+      // Add a Place Overview component card in a clickable button for each search result
+      // Documentation: https://github.com/googlemaps/extended-component-library/blob/main/src/place_overview
+      const resultButton = document.createElement("button");
+      // prettier-ignore
+      const placeComponent = document.createElement("gmpx-place-overview") as PlaceOverview;
+      placeComponent.place = place.id;
+      placeComponent.size = "small";
+      placeComponent.travelOrigin = place.location ?? undefined;
+      placeComponent.travelMode = "bicycling";
+      placeComponent.googleLogoAlreadyDisplayed = true;
+      console.log(placeComponent);
+      results.push(placeComponent);
+      resultButton.classList.add("resultButton");
+      resultButton.addEventListener("click", () => resultClick(place.location));
+      resultButton.appendChild(placeComponent);
+      fixedElement.appendChild(resultButton);
 
       console.log(place.displayName);
     });
 
-    map.fitBounds(bounds);
-  } else {
-    console.log("No results");
-  }
+    console.log(results);
+    console.log(layoutElement);
+}
+
+async function resultClick(location: google.maps.LatLng | null | undefined) {
+  if (!location) return;
+
+  // prettier-ignore
+  const { LatLngAltitude } = (await APILoader.importLibrary("core")) as google.maps.CoreLibrary;
+  const newCenter = new LatLngAltitude({
+    lat: location.lat(),
+    lng: location.lng() + 0.002,
+    altitude: 80,
+  });
+  map.center = newCenter;
+  map.heading = -90;
 }

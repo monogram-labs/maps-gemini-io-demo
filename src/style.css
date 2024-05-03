@@ -11,6 +11,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --gmpx-fixed-panel-width-row-layout: 0px;
 }
 
 body {
@@ -25,7 +26,7 @@ main,
 .api-key-banner {
   width: 100%;
   padding: 24px;
-  max-width: 800px;
+  max-width: 1024px;
   margin: 0 auto;
   border-radius: 20px;
 }
@@ -170,21 +171,18 @@ button:hover {
 
 #map {
   height: 500px;
-  width: 800px;
-  margin: auto;
 }
 
-.info-window-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-self: center
+gmpx-split-layout {
+  height: 500px;
+  width: 100%;
 }
 
-.info-window-content .place-name {
-  font-weight: 500;
+gmpx-split-layout.results {
+  --gmpx-fixed-panel-width-row-layout: 240px;
+  --gmpx-fixed-panel-height-column-layout: 20%;
 }
 
-.info-window-photo {
-  height: 100px;
+.resultButton {
+  all: unset;
 }

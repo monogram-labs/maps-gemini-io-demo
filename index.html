@@ -1,45 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/gemini.png" />
+    <title>Using Gemini and Google Maps Platform</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="/gemini.png" />
-  <title>Using Gemini and Google Maps to Plan My Trip</title>
-</head>
-
-<body>
-  <main>
-    <h1>Using Gemini and Google Maps to Plan My Trip</h1>
-    <form>
-      <div class="image-picker">
-        <label class="image-choice">
-          <input type="radio" checked name="chosen-image" value="/lakebaikal.jpeg">
-          <img src="/lakebaikal.jpeg">
-        </label>
-        <label class="image-choice">
-          <input type="radio" name="chosen-image" value="/powder-skiing.jpeg">
-          <img src="/powder-skiing.jpeg">
-        </label>
-        <label class="image-choice">
-          <input type="radio" name="chosen-image" value="/redwood-forest-hike.jpeg">
-          <img src="/redwood-forest-hike.jpeg">
-        </label>
-      </div>
-      <div class="prompt-box">
-        <!-- <label>
+  <body>
+    <main>
+      <h1>Using Gemini and Google Maps Platform</h1>
+      <form>
+        <div class="image-picker">
+          <label class="image-choice">
+            <input
+              type="radio"
+              checked
+              name="chosen-image"
+              value="/reichstag.jpeg"
+            />
+            <img src="/reichstag.jpeg" />
+          </label>
+          <label class="image-choice">
+            <input
+              type="radio"
+              name="chosen-image"
+              value="/waterfall.jpeg"
+            />
+            <img src="/waterfall.jpeg" />
+          </label>
+          <label class="image-choice">
+            <input
+              type="radio"
+              name="chosen-image"
+              value="/beach.jpeg"
+            />
+            <img src="/beach.jpeg" />
+          </label>
+        </div>
+        <div class="prompt-box">
+          <!-- <label>
           <input name="prompt" placeholder="Where do you want to go" type="text"
             value="Where can I see this place? Just the place name, please.">
         </label> -->
-        <button type="submit">Where can I see this?</button>
+          <button type="submit">Where can I see this?</button>
+        </div>
+      </form>
+      <p class="output">(Results will appear here)</p>
+
+      <gmpx-split-layout id="split-layout" row-reverse="true">
+        <div id="map" slot="main"></div>
+      </gmpx-split-layout>
+
+      <div id="map-layout">
+
       </div>
-    </form>
-    <p class="output">(Results will appear here)</p>
-  </main>
 
-  <div id="map"></div>
-  
-  <script type="module" src="/src/main.ts"></script>
-</body>
+      <div>
+        <p>Attributions</p>
+        <ul>
+          <li>
+            Building:
+            <a
+              href="https://commons.wikimedia.org/wiki/File:Reichstagsgeb%C3%A4ude_bei_Nacht,_Berlin-Mitte,_170325,_ako.jpg"
+              >Ansgar Koreng</a
+            >,
+            <a href="https://creativecommons.org/licenses/by-sa/3.0"
+              >CC BY-SA 3.0</a
+            >, via Wikimedia Common
+          </li>
+          <li>
+            Garden:
+            <a href="https://commons.wikimedia.org/wiki/File:The_Fall_in_the_Cloud_Forest,_Gardens_by_the_Bay,_Singapore_-_20120617-01.jpg">Allie Caulfield.</a>, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>, via Wikimedia Commons
+          </li>
+          <li>
+            Beach: 
+            <a href="https://commons.wikimedia.org/wiki/File:Mia_lifeg.jpeg">Cristo Vlahos</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons
+          </li>
+        </ul>
+      </div>
+    </main>
 
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
