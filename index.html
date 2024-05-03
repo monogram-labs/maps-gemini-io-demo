@@ -22,19 +22,11 @@
             <img src="/reichstag.jpeg" />
           </label>
           <label class="image-choice">
-            <input
-              type="radio"
-              name="chosen-image"
-              value="/waterfall.jpeg"
-            />
+            <input type="radio" name="chosen-image" value="/waterfall.jpeg" />
             <img src="/waterfall.jpeg" />
           </label>
           <label class="image-choice">
-            <input
-              type="radio"
-              name="chosen-image"
-              value="/beach.jpeg"
-            />
+            <input type="radio" name="chosen-image" value="/beach.jpeg" />
             <img src="/beach.jpeg" />
           </label>
         </div>
@@ -46,19 +38,85 @@
           <button type="submit">Where can I see this?</button>
         </div>
       </form>
-      <p class="output">(Results will appear here)</p>
 
-      <gmpx-split-layout id="split-layout" row-reverse="true">
-        <div id="map" slot="main"></div>
-      </gmpx-split-layout>
+      <section class="container">
+        <div class="container-header">
+          <h2 class="output">(Results will appear here)</h2>
 
-      <div id="map-layout">
+          <!-- <div class="weather-info">Weather data will be displayed here</div> -->
+        </div>
+        <gmpx-split-layout id="split-layout" row-reverse="true">
+          <div id="map" slot="main"></div>
+        </gmpx-split-layout>
 
+        <div id="map-layout"></div>
+      </section>
+
+      <!-- Reviews -->
+      <section class="review-container">
+        <div class="container">
+          <div class="container-header">
+            <h2>Trip review</h2>
+          </div>
+
+          <div class="reviews">
+            <div id="validate-model"></div>
+            <div id="model-wrapper">
+              <input
+                type="text"
+                hidden
+                id="prompt-title"
+                placeholder="Review title"
+              />
+              <textarea
+                id="prompt-text"
+                rows="10"
+                cols="50"
+                placeholder="Write review here"
+                id="prompt-text"
+              >
+    I recently returned from a delightful trip here and I can't recommend it enough! This sunny location proved to be the perfect place to unwind and soak up some rays.
+    
+    From the moment I arrived, I was struck by the warmth and hospitality of the local people. Everyone I encountered, from shopkeepers to fellow tourists, seemed genuinely friendly and helpful. The positive energy was contagious!
+              
+    I was thrilled with the culinary scene. The restaurants offered a fantastic mix of fresh, flavorful dishes featuring local ingredients. Whether I was craving [type of food] or something more adventurous, I found delicious options at every turn.
+              
+    Of course, the main draw of this trip was the stunning scenery. I spent hours exploring the landscape - beaches, mountains, etc. The natural beauty of the area was simply breathtaking.
+              
+    Overall, this trip was everything I could have hoped for and more. It's a place I'd love to visit again and a destination I wholeheartedly recommend to anyone seeking a balance of relaxation, good food, and friendly faces.
+          </textarea
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="container" id="prettier-version">
+          <div class="container-header">
+            <h2>Prettier version</h2>
+
+            <button id="clear">Clear</button>
+          </div>
+          <div class="content">
+            <p id="ai-output">
+              <span class="ai-output-placeholder">(Results will be here)</span>
+            </p>
+            <p id="ai-output-stream"></p>
+            <p id="ai-output-tone"></p>
+          </div>
+        </div>
+      </section>
+
+      <div class="buttons-container">
+        <button id="ai-button" hidden>Run AI</button>
+        <button id="ai-button-stream" hidden>Run AI Stream</button>
+        <button id="generate-title">Generate Title</button>
+        <button id="rewrite-review">Summarize</button>
+        <button id="check-toxicity">Check Tone</button>
       </div>
 
-      <div>
-        <p>Attributions</p>
-        <ul>
+      <section class="attributions">
+        <h2>Attributions</h2>
+        <ol>
           <li>
             Building:
             <a
@@ -71,16 +129,27 @@
           </li>
           <li>
             Garden:
-            <a href="https://commons.wikimedia.org/wiki/File:The_Fall_in_the_Cloud_Forest,_Gardens_by_the_Bay,_Singapore_-_20120617-01.jpg">Allie Caulfield.</a>, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>, via Wikimedia Commons
+            <a
+              href="https://commons.wikimedia.org/wiki/File:The_Fall_in_the_Cloud_Forest,_Gardens_by_the_Bay,_Singapore_-_20120617-01.jpg"
+              >Allie Caulfield.</a
+            >,
+            <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>,
+            via Wikimedia Commons
           </li>
           <li>
-            Beach: 
-            <a href="https://commons.wikimedia.org/wiki/File:Mia_lifeg.jpeg">Cristo Vlahos</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons
+            Beach:
+            <a href="https://commons.wikimedia.org/wiki/File:Mia_lifeg.jpeg"
+              >Cristo Vlahos</a
+            >,
+            <a href="https://creativecommons.org/licenses/by-sa/4.0"
+              >CC BY-SA 4.0</a
+            >, via Wikimedia Commons
           </li>
-        </ul>
-      </div>
+        </ol>
+      </section>
     </main>
 
     <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/travel.js"></script>
   </body>
 </html>

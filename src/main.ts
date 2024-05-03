@@ -8,8 +8,8 @@ import "@googlemaps/extended-component-library/api_loader.js";
 import { APILoader } from "@googlemaps/extended-component-library/api_loader.js";
 import "@googlemaps/extended-component-library/place_overview.js";
 import { PlaceOverview } from "@googlemaps/extended-component-library/place_overview.js";
-import '@googlemaps/extended-component-library/split_layout.js';
-import { SplitLayout } from '@googlemaps/extended-component-library/split_layout.js';
+import "@googlemaps/extended-component-library/split_layout.js";
+import { SplitLayout } from "@googlemaps/extended-component-library/split_layout.js";
 import Base64 from "base64-js";
 import "./style.css";
 
@@ -23,7 +23,7 @@ const GEMINI_API_KEY = "AIzaSyBK88lzuqZvl7EvL9qm1he1BiI7arO8mBY";
 // Open the Integrations panel to Enable the Maps JavaScript API
 // Get your Maps and Places API key at https://goo.gle/js-api-key
 // Be sure to enable Maps JavaScript API, Geocoding API, and Places API (New)
-const MAPS_API_KEY = "AIzaSyCWFATm-_x_igtFE-dVHrMf2H_iZx25tKo";
+const MAPS_API_KEY = "AIzaSyDe61wuiQ3lr8AL9FSxhVTanI4pyD7sG28";
 
 const form: HTMLFormElement | null = document.querySelector("form");
 if (!form) {
@@ -51,7 +51,11 @@ let placeName = "";
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  output.textContent = "Generating...";
+  output.innerHTML = `<div class="loading">
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    </div> Generating...`;
 
   try {
     const chosenImage = form.elements.namedItem(
@@ -230,44 +234,44 @@ async function findNearbyLodging(location: google.maps.LatLng) {
 // Documentation (install Extended Component Library): https://github.com/googlemaps/extended-component-library/tree/maine#installation
 // Documentation (Split Layout): https://github.com/googlemaps/extended-component-library/blob/main/src/split_layout
 async function addResults(places: google.maps.places.Place[]) {
-    const oldFixedElement = document.getElementById("fixed-panel");
-    oldFixedElement?.remove();
-    const layoutElement = document.getElementById("split-layout") as SplitLayout;
-    if (!layoutElement) throw new Error("#split-layout not found");
-    const fixedElement = document.createElement("div");
-    fixedElement.id = "fixed-panel"
-    fixedElement.slot = "fixed";
-    layoutElement.appendChild(fixedElement);
-    layoutElement.classList.add("results");
+  const oldFixedElement = document.getElementById("fixed-panel");
+  oldFixedElement?.remove();
+  const layoutElement = document.getElementById("split-layout") as SplitLayout;
+  if (!layoutElement) throw new Error("#split-layout not found");
+  const fixedElement = document.createElement("div");
+  fixedElement.id = "fixed-panel";
+  fixedElement.slot = "fixed";
+  layoutElement.appendChild(fixedElement);
+  layoutElement.classList.add("results");
 
-    const results: PlaceOverview[] = [];
+  const results: PlaceOverview[] = [];
 
-    // Loop through and get all the results.
-    places.forEach(async (place) => {
-      console.log(place.id);
+  // Loop through and get all the results.
+  places.forEach(async (place) => {
+    console.log(place.id);
 
-      // Add a Place Overview component card in a clickable button for each search result
-      // Documentation: https://github.com/googlemaps/extended-component-library/blob/main/src/place_overview
-      const resultButton = document.createElement("button");
-      // prettier-ignore
-      const placeComponent = document.createElement("gmpx-place-overview") as PlaceOverview;
-      placeComponent.place = place.id;
-      placeComponent.size = "small";
-      placeComponent.travelOrigin = place.location ?? undefined;
-      placeComponent.travelMode = "bicycling";
-      placeComponent.googleLogoAlreadyDisplayed = true;
-      console.log(placeComponent);
-      results.push(placeComponent);
-      resultButton.classList.add("resultButton");
-      resultButton.addEventListener("click", () => resultClick(place.location));
-      resultButton.appendChild(placeComponent);
-      fixedElement.appendChild(resultButton);
+    // Add a Place Overview component card in a clickable button for each search result
+    // Documentation: https://github.com/googlemaps/extended-component-library/blob/main/src/place_overview
+    const resultButton = document.createElement("button");
+    // prettier-ignore
+    const placeComponent = document.createElement("gmpx-place-overview") as PlaceOverview;
+    placeComponent.place = place.id;
+    placeComponent.size = "small";
+    placeComponent.travelOrigin = place.location ?? undefined;
+    placeComponent.travelMode = "bicycling";
+    placeComponent.googleLogoAlreadyDisplayed = true;
+    console.log(placeComponent);
+    results.push(placeComponent);
+    resultButton.classList.add("resultButton");
+    resultButton.addEventListener("click", () => resultClick(place.location));
+    resultButton.appendChild(placeComponent);
+    fixedElement.appendChild(resultButton);
 
-      console.log(place.displayName);
-    });
+    console.log(place.displayName);
+  });
 
-    console.log(results);
-    console.log(layoutElement);
+  console.log(results);
+  console.log(layoutElement);
 }
 
 async function resultClick(location: google.maps.LatLng | null | undefined) {
