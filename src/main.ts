@@ -19,11 +19,16 @@ import "./style.css";
 // 🔥 https://g.co/ai/idxGetGeminiKey 🔥
 const GEMINI_API_KEY = "AIzaSyBK88lzuqZvl7EvL9qm1he1BiI7arO8mBY";
 
-// TODO: rewrite to mention integrations panel?
-// Open the Integrations panel to Enable the Maps JavaScript API
-// Get your Maps and Places API key at https://goo.gle/js-api-key
-// Be sure to enable Maps JavaScript API, Geocoding API, and Places API (New)
-const MAPS_API_KEY = "AIzaSyCWFATm-_x_igtFE-dVHrMf2H_iZx25tKo";
+// TODO: Get a Google Maps Platform API key:
+/*
+ * 1. Open the Project IDX view by pressing Ctrl+Shift+P / Cmd+Shift+P and type "IDX focus", then select "IDX: Focus on Project IDX View"
+ * 2. Click on the "Google Maps Platform" integration.
+ * 3. Click "Enable APIs" to enable the Google Maps Platform APIs.
+ * 4. Click "Get API Key" to get an API key.
+ * 5. Create a file named .env.local in the root directory. The .local suffix keeps secrets out of source control.
+ * 6. In the file, add the line: VITE_MAPS_API_KEY=YOUR_API_KEY.
+ * 7. Replace YOUR_API_KEY with the API key you got in step 4. */
+const MAPS_API_KEY = import.meta.env.VITE_MAPS_API_KEY;
 
 const form: HTMLFormElement | null = document.querySelector("form");
 if (!form) {
