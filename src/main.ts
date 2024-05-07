@@ -120,9 +120,9 @@ form.addEventListener("submit", async (e) => {
 });
 
 /**
- * Add a map
- * Sample: https://developers.google.com/maps/documentation/javascript/examples/map-simple
- * Docs: https://developers.google.com/maps/documentation/javascript/adding-a-google-map
+ * Add a Photorealistic 3D map
+ * Samples: https://developers.google.com/maps/documentation/javascript/3d-maps-samples
+ * Docs: https://developers.google.com/maps/documentation/javascript/3d-maps-overview
  */
 function initMap() {
   // if (map) return;
@@ -151,10 +151,10 @@ function initMap() {
 }
 
 /**
- * Get the lat/lng of the place
+ * Get the map coordinates (latitude and longitude) of the place
  * 1. Dynamically load the Geocoding library
  *  Docs: https://developers.google.com/maps/documentation/javascript/libraries
- * 2. Geocode (supposed to be based on an address)
+ * 2. Geocode an address
  *  Sample: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
  *  Docs: https://developers.google.com/maps/documentation/javascript/geocoding
  */
@@ -207,12 +207,7 @@ async function findNearbyLodging(location: google.maps.LatLng) {
   const request: google.maps.places.SearchNearbyRequest = {
     // required parameters
     fields: [
-      "displayName",
-      "location",
-      "rating",
-      "photos",
-      "formattedAddress",
-      "reviews",
+      "id",
     ],
     locationRestriction: {
       center: location,
@@ -235,9 +230,12 @@ async function findNearbyLodging(location: google.maps.LatLng) {
   }
 }
 
-// Add and populate a Place Overview component in a Split Layout with the map
-// Documentation (install Extended Component Library): https://github.com/googlemaps/extended-component-library/tree/maine#installation
-// Documentation (Split Layout): https://github.com/googlemaps/extended-component-library/blob/main/src/split_layout
+/*
+ * Add and populate a Place Overview component in a Split Layout with the map
+ * Documentation (install Extended Component Library): https://github.com/googlemaps/extended-component-library/tree/main#installation
+ * Documentation (Split Layout): https://github.com/googlemaps/extended-component-library/blob/main/src/split_layout
+ * Documentation (Place Overview): https://github.com/googlemaps/extended-component-library/blob/main/src/place_overview
+ */
 async function addResults(places: google.maps.places.Place[]) {
   const oldFixedElement = document.getElementById("fixed-panel");
   oldFixedElement?.remove();
@@ -256,7 +254,6 @@ async function addResults(places: google.maps.places.Place[]) {
     console.log(place.id);
 
     // Add a Place Overview component card in a clickable button for each search result
-    // Documentation: https://github.com/googlemaps/extended-component-library/blob/main/src/place_overview
     const resultButton = document.createElement("button");
     // prettier-ignore
     const placeComponent = document.createElement("gmpx-place-overview") as PlaceOverview;
