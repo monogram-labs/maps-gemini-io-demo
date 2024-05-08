@@ -19,11 +19,16 @@ import "./style.css";
 // 🔥 https://g.co/ai/idxGetGeminiKey 🔥
 const GEMINI_API_KEY = "AIzaSyBK88lzuqZvl7EvL9qm1he1BiI7arO8mBY";
 
-// TODO: rewrite to mention integrations panel?
-// Open the Integrations panel to Enable the Maps JavaScript API
-// Get your Maps and Places API key at https://goo.gle/js-api-key
-// Be sure to enable Maps JavaScript API, Geocoding API, and Places API (New)
-const MAPS_API_KEY = "AIzaSyCWFATm-_x_igtFE-dVHrMf2H_iZx25tKo";
+// TODO: Get a Google Maps Platform API key:
+/*
+ * 1. Open the Project IDX view by pressing Ctrl+Shift+P / Cmd+Shift+P and type "IDX focus", then select "IDX: Focus on Project IDX View"
+ * 2. Click on the "Google Maps Platform" integration.
+ * 3. Click "Enable APIs" to enable the Google Maps Platform APIs.
+ * 4. Click "Get API Key" to get an API key.
+ * 5. Create a file named .env.local in the root directory. The .local suffix keeps secrets out of source control.
+ * 6. In the file, add the line: VITE_MAPS_API_KEY=YOUR_API_KEY.
+ * 7. Replace YOUR_API_KEY with the API key you got in step 4. */
+const MAPS_API_KEY = import.meta.env.VITE_MAPS_API_KEY;
 
 const form: HTMLFormElement | null = document.querySelector("form");
 if (!form) {
@@ -115,9 +120,9 @@ form.addEventListener("submit", async (e) => {
 });
 
 /**
- * Add a map
- * Sample: https://developers.google.com/maps/documentation/javascript/examples/map-simple
- * Docs: https://developers.google.com/maps/documentation/javascript/adding-a-google-map
+ * Add a Photorealistic 3D map
+ * Samples: https://developers.google.com/maps/documentation/javascript/3d-maps-samples
+ * Docs: https://developers.google.com/maps/documentation/javascript/3d-maps-overview
  */
 function initMap() {
   // if (map) return;
@@ -146,10 +151,10 @@ function initMap() {
 }
 
 /**
- * Get the lat/lng of the place
+ * Get the map coordinates (latitude and longitude) of the place
  * 1. Dynamically load the Geocoding library
  *  Docs: https://developers.google.com/maps/documentation/javascript/libraries
- * 2. Geocode (supposed to be based on an address)
+ * 2. Geocode an address
  *  Sample: https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
  *  Docs: https://developers.google.com/maps/documentation/javascript/geocoding
  */
@@ -202,12 +207,7 @@ async function findNearbyLodging(location: google.maps.LatLng) {
   const request: google.maps.places.SearchNearbyRequest = {
     // required parameters
     fields: [
-      "displayName",
-      "location",
-      "rating",
-      "photos",
-      "formattedAddress",
-      "reviews",
+      "id",
     ],
     locationRestriction: {
       center: location,
@@ -230,9 +230,12 @@ async function findNearbyLodging(location: google.maps.LatLng) {
   }
 }
 
-// Add and populate a Place Overview component in a Split Layout with the map
-// Documentation (install Extended Component Library): https://github.com/googlemaps/extended-component-library/tree/maine#installation
-// Documentation (Split Layout): https://github.com/googlemaps/extended-component-library/blob/main/src/split_layout
+/*
+ * Add and populate a Place Overview component in a Split Layout with the map
+ * Documentation (install Extended Component Library): https://github.com/googlemaps/extended-component-library/tree/main#installation
+ * Documentation (Split Layout): https://github.com/googlemaps/extended-component-library/blob/main/src/split_layout
+ * Documentation (Place Overview): https://github.com/googlemaps/extended-component-library/blob/main/src/place_overview
+ */
 async function addResults(places: google.maps.places.Place[]) {
   const oldFixedElement = document.getElementById("fixed-panel");
   oldFixedElement?.remove();
@@ -251,7 +254,6 @@ async function addResults(places: google.maps.places.Place[]) {
     console.log(place.id);
 
     // Add a Place Overview component card in a clickable button for each search result
-    // Documentation: https://github.com/googlemaps/extended-component-library/blob/main/src/place_overview
     const resultButton = document.createElement("button");
     // prettier-ignore
     const placeComponent = document.createElement("gmpx-place-overview") as PlaceOverview;
