@@ -206,9 +206,7 @@ async function findNearbyLodging(location: google.maps.LatLng) {
   // use Place.searchNearby to find lodging with a location bias of location
   const request: google.maps.places.SearchNearbyRequest = {
     // required parameters
-    fields: [
-      "id",
-    ],
+    fields: ["id", "location"],
     locationRestriction: {
       center: location,
       radius: 10000,
@@ -265,7 +263,10 @@ async function addResults(places: google.maps.places.Place[]) {
     console.log(placeComponent);
     results.push(placeComponent);
     resultButton.classList.add("resultButton");
-    resultButton.addEventListener("click", () => resultClick(place.location));
+    resultButton.addEventListener("click", () => {
+      resultClick(place.location);
+      console.log(place);
+    });
     resultButton.appendChild(placeComponent);
     fixedElement.appendChild(resultButton);
 
